@@ -22,8 +22,8 @@ violations = {
     "inter_trascript_id_not_empty": [],
     "inter_CNS_trascript_id_not_empty": [],
     "intron_CNS_trascript_id_empty": [],
-    "start_not_integer": [],
-    "stop_not_integer": [],
+    "start_not_valid": [],
+    "stop_not_valid": [],
     "start_greater_than_end": [],
     "score_invalid": [],
     "strand_invalid": [],
@@ -53,17 +53,13 @@ for index in range(0, 20):
         violations["invalid_fields_number"].append(index)
         continue
 
-    # frame check
-    # 8th field (index 7)
-    # Generic record allowed values: {0, 1, 2, .}
-    # "start_codon" or "stop_codon" feature allowed values: {0, 1, 2}
-    if not is_field_valid(record[7], {"0", "1", "2", "."}):
-        violations["frame_invalid"].append(index)
-        
-    if record[2] == "start_codon" and not is_field_valid(record[7], {"0", "1", "2"}):
-        violations["start_codon_invalid_frame"].append(index)
-    elif record[2] == "stop_codon"and not is_field_valid(record[7], {"0", "1", "2"}):
-        violations["stop_codon_invalid_frame"].append(index)
+    # feature check
+    # 3rd field (index 2)
+    # Allowed values: {"CDS", "start_codon", "stop_codon", "5UTR", "3UTR", "inter", "inter_CNS", "intron_CNS", "exon"}
+    # Line is ignored whether value is not allowed
+    if not is_field_valid(record[2], {"CDS", "start_codon", "stop_codon", 
+        "5UTR", "3UTR", "inter", "inter_CNS", "intron_CNS", "exon"}):
+        continue
 
     # CDS feature check
     # A "CDS" record is required
@@ -80,6 +76,21 @@ for index in range(0, 20):
     if record[2] == "stop_codon":
         violations["missing_stop_codon"] = False
             
+    # start and stop check
+    # 4th field (index 3) and 5th field (index 4) respectively
+    # start must be less than or equal to stop
+    valid_start_stop = True
+    if not (record[3].isdigit() and int(record[3]) >= 1):
+        violations["start_not_valid"].append(index)
+        valid_start_stop = False
+
+    if not (record[4].isdigit() and int(record[4]) >= 1):
+        violations["stop_not_valid"].append(index)
+        valid_start_stop = False
+
+    if (valid_start_stop and record[3] > record[4]):
+        violations["start_greater_than_end"].append(index)
+
     # score check
     # 6th field (index 5)
     # It must be an Integer or Floating Point value. "." allowed too
@@ -91,3 +102,15 @@ for index in range(0, 20):
     # Allowed value: {+, -}
     if not is_field_valid(record[6], {"+", "-"}):
         violations["strand_invalid"].append(index) 
+
+    # frame check
+    # 8th field (index 7)
+    # Generic record allowed values: {0, 1, 2, .}
+    # "start_codon" or "stop_codon" feature allowed values: {0, 1, 2}
+    if not is_field_valid(record[7], {"0", "1", "2", "."}):
+        violations["frame_invalid"].append(index)
+        
+    if record[2] == "start_codon" and not is_field_valid(record[7], {"0", "1", "2"}):
+        violations["start_codon_invalid_frame"].append(index)
+    elif record[2] == "stop_codon"and not is_field_valid(record[7], {"0", "1", "2"}):
+        violations["stop_codon_invalid_frame"].append(index)
