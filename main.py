@@ -35,8 +35,6 @@ def write_report():
         n_issues += 1
         file_out.write(str(n_issues) + "\t" + "/" + "\t\t" + "stop_codon total lenght must be less than or equal to 3\n")
         
-    
-
 def is_field_valid(field, allowed_values):
     return True if field in allowed_values else False
 
