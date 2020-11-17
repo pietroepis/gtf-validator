@@ -8,6 +8,9 @@ import re
 def is_field_valid(field, allowed_values):
     return True if field in allowed_values else False
 
+def parse_attributes(field):
+    re.findall(r"(\w+) (\".+\"|\d+);", field)
+
 file_name = "./samples/file-1.gtf"
 lines = []
 violations = {
