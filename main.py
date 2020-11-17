@@ -11,29 +11,15 @@ def write_report():
     file_out = open("report.txt", "w")
     file_out.write("#\tRecord\tProblem\n")
 
-    if violations["source_not_unique"]:
-        n_issues += 1
-        file_out.write(str(n_issues) + "\t" + "/" + "\t\t" + "\"source\" field must be unique\n")
-
-    if violations["missing_cds"]:
-        n_issues += 1
-        file_out.write(str(n_issues) + "\t" + "/" + "\t\t" + "A \"CDS\" record is required\n")
-
-    if violations["missing_start_codon"]:
-        n_issues += 1
-        file_out.write(str(n_issues) + "\t" + "/" + "\t\t" + "A \"start_codon\" record is required\n")
-
-    if violations["missing_stop_codon"]:
-        n_issues += 1
-        file_out.write(str(n_issues) + "\t" + "/" + "\t\t" + "A \"stop_codon\" record is required\n")
-
-    if violations["start_codon_more_than_3"]:
-        n_issues += 1
-        file_out.write(str(n_issues) + "\t" + "/" + "\t\t" + "start_codon total lenght must be less than or equal to 3\n")
-
-    if violations["stop_codon_more_than_3"]:
-        n_issues += 1
-        file_out.write(str(n_issues) + "\t" + "/" + "\t\t" + "stop_codon total lenght must be less than or equal to 3\n")
+    for key in violations:
+        if type(violations[key]["value"]) == bool: 
+            if violations[key]["value"]:
+                n_issues += 1
+                file_out.write(str(n_issues) + "\t" + "/" + "\t\t" + violations[key]["msg"] + "\n")
+        else:
+            for row in violations[key]["value"]:
+                n_issues += 1
+                file_out.write(str(n_issues) + "\t" + str(row) + "\t\t" + violations[key]["msg"] + "\n")
         
 def is_field_valid(field, allowed_values):
     return True if field in allowed_values else False
