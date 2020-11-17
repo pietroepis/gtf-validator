@@ -9,7 +9,7 @@ def is_field_valid(field, allowed_values):
     return True if field in allowed_values else False
 
 def parse_attributes(field):
-    re.findall(r"(\w+) (\".+\"|\d+);", field)
+    return re.findall(r"(\w+) (\"[^\"]+\"|[0-9]+);", field)
 
 file_name = "./samples/file-1.gtf"
 lines = []
