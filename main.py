@@ -96,13 +96,13 @@ for index in range(0, 20):
         valid_start_stop = False
 
     if valid_start_stop:
-        if record[3] > record[4]
+        if record[3] > record[4]:
             violations["start_greater_than_end"]["value"].append(index)
-        elif record[4] - record[3] == 2
-            if record[2] == "start_codon" and record[7] != "0"
-                violations["invalid_frame_contig_start_codon"].append(index)
-            elif record[2] == "stop_codon" and record[7] != "0"
-                violations["invalid_frame_contig_stop_codon"].append(index)
+        elif record[4] - record[3] == 2:
+            if record[2] == "start_codon" and record[7] != "0":
+                violations["invalid_frame_contig_start_codon"]["value"].append(index)
+            elif record[2] == "stop_codon" and record[7] != "0":
+                violations["invalid_frame_contig_stop_codon"]["value"].append(index)
 
     # score check
     # 6th field (index 5)
