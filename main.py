@@ -9,7 +9,8 @@ def is_field_valid(field, allowed_values):
     return True if field in allowed_values else False
 
 def parse_attributes(field):
-    re.findall(r"([\w\s]+) (\"[^\"]+\"|[0-9]+)", field)
+    return re.findall(r"([\w\s]+) ([\w\"]+)", field)
+    #return re.findall(r"([\w\s]+) (\"[^\"]+\"|[0-9]+)", field)
 
 file_name = "./samples/file-1.gtf"
 lines = []
@@ -117,3 +118,28 @@ for index in range(0, 20):
         violations["start_codon_invalid_frame"].append(index)
     elif record[2] == "stop_codon"and not is_field_valid(record[7], {"0", "1", "2"}):
         violations["stop_codon_invalid_frame"].append(index)
+
+    # attributes check
+    # 9th field (index 8)
+    found_gene_id, found_transcript_id = False, False
+    for j, attribute in enumerate(parse_attributes(record[8])):
+        if j > 0 and attribute[0][0] != " ":
+            violations["invalid_attributes_separator"].append(index)
+            break
+
+        if attribute[0].rstrip() == "gene_id":
+            found_gene_id = True
+        elif attribute[0].rstrip() == "transcript_id":
+            found_transcript_id = True
+        elif not found_gene_id or not found_transcript_id:
+            violations["invalid_attributes_order"].append(index)
+            break
+
+        if re.search(r"\"[\w]+\"|[0-9]+", attribute[1]) == None:
+            violations["text_attribute_not_doublequotes"].append(index)
+    
+    if not found_gene_id:
+        violations["missing_gene_id"].append(index)
+
+    if not found_transcript_id:
+        violations["missing_transcript_id"].append(index)
