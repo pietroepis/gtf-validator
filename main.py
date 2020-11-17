@@ -85,6 +85,7 @@ for index in range(0, 20):
     # start and end check
     # 4th field (index 3) and 5th field (index 4) respectively
     # start must be less than or equal to stop
+    # in "start_codon" and "stop_codon" records, if they're contiguous frame must be 0
     valid_start_stop = True
     if not (record[3].isdigit() and int(record[3]) >= 1):
         violations["start_not_valid"]["value"].append(index)
@@ -94,8 +95,14 @@ for index in range(0, 20):
         violations["end_not_valid"]["value"].append(index)
         valid_start_stop = False
 
-    if (valid_start_stop and record[3] > record[4]):
-        violations["start_greater_than_end"]["value"].append(index)
+    if valid_start_stop:
+        if record[3] > record[4]
+            violations["start_greater_than_end"]["value"].append(index)
+        elif record[4] - record[3] == 2
+            if record[2] == "start_codon" and record[7] != "0"
+                violations["invalid_frame_contig_start_codon"].append(index)
+            elif record[2] == "stop_codon" and record[7] != "0"
+                violations["invalid_frame_contig_stop_codon"].append(index)
 
     # score check
     # 6th field (index 5)

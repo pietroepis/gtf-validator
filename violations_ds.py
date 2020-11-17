@@ -64,6 +64,14 @@ violations = {
         "value": [],
         "msg": "\"start\" must be less than or equal to \"end\""
     },
+    "invalid_frame_contig_start_codon": {
+        "value": [],
+        "msg": "if \"start_codon\" is contiguous, frame must be 0"
+    },
+    "invalid_frame_contig_stop_codon": {
+        "value": [],
+        "msg": "if \"stop_codon\" is contiguous, frame must be 0"
+    },
     "score_invalid": {
         "value": [],
         "msg": "\"score\" must be a numeric value. Dot allowed to"
