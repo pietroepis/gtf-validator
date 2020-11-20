@@ -31,14 +31,16 @@ def parse_attributes(field):
 
 file_name = "./samples/file-1.gtf"
 start_codon_bp, stop_codon_bp = 0, 0
+prev_source = ""
 lines = []
 
 with open(file_name, "r") as input_file:
     lines = input_file.readlines()
 
-#for index, line in enumerate(lines):
-for index in range(0, 20): 
-    line = lines[index]
+for index, line in enumerate(lines):
+#for index in range(0, 20): 
+    #line = lines[index]
+    
     # Ignore if whole line is a comment
     if line[0] == "#":
         continue
@@ -54,8 +56,10 @@ for index in range(0, 20):
     # source check
     # 2nd field (index 1)
     # source must be unique in the file
-    if index > 0 and record[1] != lines[index-1][1]:
+    if prev_source != "" and prev_source != record[1]:
         violations["source_not_unique"]["value"] = True
+    
+    prev_source = record[1]
 
     # feature check
     # 3rd field (index 2)
@@ -96,9 +100,9 @@ for index in range(0, 20):
         valid_start_stop = False
 
     if valid_start_stop:
-        if record[3] > record[4]:
+        if int(record[3]) > int(record[4]):
             violations["start_greater_than_end"]["value"].append(index)
-        elif record[4] - record[3] == 2:
+        elif int(record[4]) - int(record[3]) == 2:
             if record[2] == "start_codon" and record[7] != "0":
                 violations["invalid_frame_contig_start_codon"]["value"].append(index)
             elif record[2] == "stop_codon" and record[7] != "0":
@@ -139,9 +143,9 @@ for index in range(0, 20):
             violations["invalid_attributes_separator"]["value"].append(index)
             break
 
-        if attribute[0].rstrip() == "gene_id":
+        if attribute[0].strip() == "gene_id":
             found_gene_id = True
-        elif attribute[0].rstrip() == "transcript_id":
+        elif attribute[0].strip() == "transcript_id":
             found_transcript_id = True
             if record[2] == "inter" and attribute[1] != "":
                 violations["inter_trascript_id_not_empty"]["value"].append(index)
@@ -153,9 +157,10 @@ for index in range(0, 20):
             violations["invalid_attributes_order"]["value"].append(index)
             break
 
-        if re.search(r"\"[\w]+\"|[0-9]+", attribute[1]) == None:
+        if re.search(r"(?:\"[^\"]*\")|(?:[0-9]+)", attribute[1]) == None:
+            print(str(index) + " " + attribute[1])
             violations["text_attribute_not_doublequotes"]["value"].append(index)
-    
+
     if not found_gene_id:
         violations["missing_gene_id"]["value"].append(index)
 
