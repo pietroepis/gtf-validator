@@ -74,7 +74,7 @@ violations = {
     },
     "score_invalid": {
         "value": [],
-        "msg": "\"score\" must be a numeric value. Dot allowed to"
+        "msg": "\"score\" must be a numeric value. Dot allowed too"
     },
     "strand_invalid": {
         "value": [],

@@ -19,28 +19,25 @@ def write_report():
         else:
             for row in violations[key]["value"]:
                 n_issues += 1
-                file_out.write(str(n_issues) + "\t" + str(row) + "\t\t" + violations[key]["msg"] + "\n")
+                file_out.write(str(n_issues) + "\t" + str(row + 1) + "\t\t" + violations[key]["msg"] + "\n")
         
 def is_field_valid(field, allowed_values):
     return True if field in allowed_values else False
 
 def parse_attributes(field):
-    return re.findall(r"(\s?\w+) ([^;]+;)", field)
-    #return re.findall(r"([\w\s]+) ([\w\"]+;?)", field)
-    #return re.findall(r"([\w\s]+) (\"[^\"]+\"|[0-9]+)", field)
+    return re.findall(r"(\s?\w+) ((?:(?:\"[^\"]*\")|(?:[0-9]+)|(?:[^\s;]+[\s;]));?)", field)
 
-file_name = "./samples/file-1.gtf"
 start_codon_bp, stop_codon_bp = 0, 0
 prev_source = ""
 lines = []
 
-with open(file_name, "r") as input_file:
+# Read File
+print("Input File: samples/", end="")
+file_name = input()
+with open("./samples/" + file_name, "r") as input_file:
     lines = input_file.readlines()
 
 for index, line in enumerate(lines):
-#for index in range(0, 20): 
-    #line = lines[index]
-    
     # Ignore if whole line is a comment
     if line[0] == "#":
         continue
@@ -77,15 +74,22 @@ for index, line in enumerate(lines):
     # start_codon feature check
     # A "start_codon" record is required
     if record[2] == "start_codon":
-        violations["missing_start_codon"]["value"] = False     
-        start_codon_bp += record[4] - record[3] + 1       
+        violations["missing_start_codon"]["value"] = False
+        try:     
+            start_codon_bp += int(record[4]) - int(record[3]) + 1       
+        except:
+            # In case of non-numeric values, violation will be noticed later
+            pass
 
     # stop_codon feature check
     # A "stop_codon" record is required
     if record[2] == "stop_codon":
         violations["missing_stop_codon"]["value"] = False
-        stop_codon_bp += record[4] - record[3] + 1   
-            
+        try:
+            stop_codon_bp += int(record[4]) - int(record[3]) + 1   
+        except:
+            pass
+
     # start and end check
     # 4th field (index 3) and 5th field (index 4) respectively
     # start must be less than or equal to stop
@@ -126,11 +130,11 @@ for index, line in enumerate(lines):
     # "start_codon" or "stop_codon" feature allowed values: {0, 1, 2}
     if not is_field_valid(record[7], {"0", "1", "2", "."}):
         violations["frame_invalid"]["value"].append(index)
-        
-    if record[2] == "start_codon" and not is_field_valid(record[7], {"0", "1", "2"}):
-        violations["start_codon_invalid_frame"]["value"].append(index)
-    elif record[2] == "stop_codon"and not is_field_valid(record[7], {"0", "1", "2"}):
-        violations["stop_codon_invalid_frame"]["value"].append(index)
+    else:
+        if record[2] == "start_codon" and not is_field_valid(record[7], {"0", "1", "2"}):
+            violations["start_codon_invalid_frame"]["value"].append(index)
+        elif record[2] == "stop_codon"and not is_field_valid(record[7], {"0", "1", "2"}):
+            violations["stop_codon_invalid_frame"]["value"].append(index)
 
     # attributes check
     # 9th field (index 8)
@@ -141,24 +145,23 @@ for index, line in enumerate(lines):
     for j, attribute in enumerate(parse_attributes(record[8])):
         if attribute[1][-1] != ";" or (j > 0 and not (attribute[0][0] == " " and attribute[0][1] != " ")):
             violations["invalid_attributes_separator"]["value"].append(index)
-            break
 
-        if attribute[0].strip() == "gene_id":
+        attr_value = attribute[1].replace(";", "")
+
+        if "gene_id" in attribute[0]:
             found_gene_id = True
-        elif attribute[0].strip() == "transcript_id":
+        elif "transcript_id" in attribute[0]:
             found_transcript_id = True
-            if record[2] == "inter" and attribute[1] != "":
+            if record[2] == "inter" and attr_value != "\"\"":
                 violations["inter_trascript_id_not_empty"]["value"].append(index)
-            elif record[2] == "inter_CNS" and attribute[1] != "":
+            elif record[2] == "inter_CNS" and attr_value != "\"\"":
                 violations["inter_CNS_trascript_id_not_empty"]["value"].append(index)
-            elif record[2] == "inter_CNS" and attribute[1] != "":
+            elif record[2] == "intron_CNS" and attr_value == "\"\"":
                 violations["intron_CNS_trascript_id_empty"]["value"].append(index)
         elif not found_gene_id or not found_transcript_id:
             violations["invalid_attributes_order"]["value"].append(index)
-            break
 
-        if re.search(r"(?:\"[^\"]*\")|(?:[0-9]+)", attribute[1]) == None:
-            print(str(index) + " " + attribute[1])
+        if re.search(r"(?:\"[^\"]*\")|(?:[0-9]+)", attr_value) == None:
             violations["text_attribute_not_doublequotes"]["value"].append(index)
 
     if not found_gene_id:
@@ -174,3 +177,4 @@ if stop_codon_bp > 3:
     violations["stop_codon_more_than_3"]["value"] = True
 
 write_report()
+print("report.txt successfully generated")
