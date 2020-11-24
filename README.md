@@ -14,6 +14,10 @@ The possible violations that are assessed and evaluated by the script are descri
 | Missing CDS | At least one _CDS_ feature is required in the file | file-2.gtf |
 | Missing start codon | At least one _start_codon_ feature is required in the file | file-3.gtf |
 | Missing stop codon | At least one _stop_codon_ feature is required in the file | file-4.gtf |
+| Start codon is more than 3bp long | _start_codon_ feature is allowed to be non-atomic, anyhow its total length is up to 3bp in total | file-5.gtf |
+| Stop codon is more than 3bp long | _stop_codon_ feature is allowed to be non-atomic, anyhow its total length is up to 3bp in total | file-6.gtf |
+| Invalid fields number | Every record is composed of 9 fields, separated by `\t` (_seqname_, _source_, _feature_, _start_, _end_, _score_, _strand_, _frame_, _attributes_) | file-7.gtf |
+| Start codon invalid frame | The allowed values for the _frame_ field of a _start_codon_ feature are {0, 1, 2} | file-8.gtf |
 
 
 After validation, detected violations are listed in `report.txt` file, that is written in current directory.
