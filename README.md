@@ -18,6 +18,11 @@ The possible violations that are assessed and evaluated by the script are descri
 | Stop codon is more than 3bp long | _stop_codon_ feature is allowed to be non-atomic, anyhow its total length is up to 3bp in total | file-6.gtf |
 | Invalid fields number | Every record is composed of 9 fields, separated by `\t` (_seqname_, _source_, _feature_, _start_, _end_, _score_, _strand_, _frame_, _attributes_) | file-7.gtf |
 | Start codon invalid frame | The allowed values for the _frame_ field of a _start_codon_ feature are {0, 1, 2} | file-8.gtf |
+| Stop codon invalid frame | The allowed values for the _frame_ field of a _stop_codon_ feature are {0, 1, 2} | file-9.gtf |
+| "transcript_id" not empty in _inter_ feature | "transcript_id" attribute must have `""` as value in _inter_ feature records | file-10.gtf |
+| "transcript_id" not empty in _inter_CND_ feature | "transcript_id" attribute must have `""` as value in _inter_CNS_ feature records | file-11.gtf |
+| "transcript_id" empty in _intron_CNS_ feature | _intron_CNS_ should have an associated "transcript_id", therefore attribute value should be different from `""` | file-12.gtf |
+
 
 
 After validation, detected violations are listed in `report.txt` file, that is written in current directory.
