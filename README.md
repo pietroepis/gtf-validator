@@ -22,7 +22,21 @@ The possible violations that are assessed and evaluated by the script are descri
 | "transcript_id" not empty in _inter_ feature | "transcript_id" attribute must have `""` as value in _inter_ feature records | file-10.gtf |
 | "transcript_id" not empty in _inter_CND_ feature | "transcript_id" attribute must have `""` as value in _inter_CNS_ feature records | file-11.gtf |
 | "transcript_id" empty in _intron_CNS_ feature | _intron_CNS_ should have an associated "transcript_id", therefore attribute value should be different from `""` | file-12.gtf |
-
+| Start not valid | _start_ field of every record must be an integer value, greater than or equal to 1 | file-13.gtf |
+| End not valid | _end_ field of every record must be an integer value, greater than or equal to 1 | file-14.gtf |
+| Start greater than end | _start_ field must be less than or equal to _end_ field | file-15.gtf |
+| Invalid frame for contiguous start_codon | If _start_codon_ feature is not split in more records (and so contiguous), its _frame_ value must be 0 | file-16.gtf |
+| Invalid frame for contiguous stop_codon | If _stop_codon_ feature is not split in more records (and so contiguous), its _frame_ value must be 0 | file-17.gtf |
+| Invalid score | _score_ field must contain a numeric value. A dot is allowed too | file-18.gtf |
+| Invalid strand | _strand_ field allowed values are {+, -} | file-19.gtf |
+| Invalid frame | _frame_ field allowed values are {0, 1, 2, .} (dot is not allowed for _start_codon_ and _stop_codon_ as stated above) | file-20.gtf |
+| Missing "gene_id" | The "gene_id" attribute is required in every record | file-21.gtf |
+| Missing "transcript_id" | The "transcript_id" attribute is required in every record, even if with empty value as shown before | file-22.gtf |
+| Invalid attributes order | "gene_id" and "transcript_id" attributes must always be the first. Every other possible attribute will follow these two | file-23.gtf |
+| Invalid attributes separator | Every attribute must be followed by a semicolon. Whether it's not the last in the list, it will alsa be separated by the following one with exactly one space | file-24.gtf |
+| Text attribute not in `""` | Text attributes must be wrapped by double quotes | file-25.gtf |
+| Start codon not in CDS coordinates | A _start_codon_ feature (that is not required to be atomic and can be defined in several records as separated intervals) must be included in the intervals of coordinates of the _CDS_ | file-26.gtf |
+| Stop codon in 3UTR coordinates | A _stop_codon_ feature (that is not required to be atomic and can be defined in several records as separated intervals) must not be included in the intervals of coordinates of _3UTR_ feature | file-27.gtf |
 
 
 After validation, detected violations are listed in `report.txt` file, that is written in current directory.
