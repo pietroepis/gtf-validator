@@ -27,7 +27,21 @@ def is_field_valid(field, allowed_values):
 def parse_attributes(field):
     return re.findall(r"(\s?\w+) ((?:(?:\"[^\"]*\")|(?:[0-9]+)|(?:[^\s;]+[\s;]));?)", field)
 
+# It checks if every interval in sub is contained in at least one interval of main
+# Intervals are represented by tuples (start, end) 
+# target = 0 means that every sub interval must be included in a cds interval
+# target = 1 means that every sub interval must not be included in a cds interval
+def check_intervals(main, sub, target):
+    for item in sub:
+        valid_interval = len([interval for interval in main if (item[0] >= interval[0] and item[1] <= interval[1])]) != 0
+        if (valid_interval and target == 1) or (not valid_interval and target == 0):
+            return False
+
+    return True
+
+
 start_codon_bp, stop_codon_bp = 0, 0
+cds_intervals, _3utr_intervals, start_codon_intervals, stop_codon_intervals = [], [], [], []
 prev_source = ""
 lines = []
 
@@ -112,6 +126,15 @@ for index, line in enumerate(lines):
             elif record[2] == "stop_codon" and record[7] != "0":
                 violations["invalid_frame_contig_stop_codon"]["value"].append(index)
 
+        if record[2] == "CDS":
+            cds_intervals.append((int(record[3]), int(record[4])))
+        if record[2] == "3UTR":
+            _3utr_intervals.append((int(record[3]), int(record[4])))
+        elif record[2] == "start_codon":
+            start_codon_intervals.append((int(record[3]), int(record[4])))
+        elif record[2] == "stop_codon":
+            stop_codon_intervals.append((int(record[3]), int(record[4])))
+
     # score check
     # 6th field (index 5)
     # It must be an Integer or Floating Point value. "." allowed too
@@ -175,6 +198,14 @@ if start_codon_bp > 3:
     violations["start_codon_more_than_3"]["value"] = True
 if stop_codon_bp > 3:
     violations["stop_codon_more_than_3"]["value"] = True
+
+# start_codon must be included in CDS coordinates
+if not check_intervals(cds_intervals, start_codon_intervals, 0):
+    violations["start_codon_not_in_cds"]["value"] = True
+
+# stop_codon must not be included in 3UTR coordinates
+if not check_intervals(_3utr_intervals, stop_codon_intervals, 1):
+    violations["stop_codon_in_3utr"]["value"] = True
 
 write_report()
 print("report.txt successfully generated")

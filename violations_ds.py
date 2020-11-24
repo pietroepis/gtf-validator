@@ -20,6 +20,14 @@ violations = {
         "value": True,
         "msg": "A \"stop_codon\" record is required"
     },
+    "start_codon_not_in_cds": {
+        "value": False,
+        "msg": "A \"start_codon\" feature must be included in the coordinates of \"CDS\" features"
+    },
+    "stop_codon_in_3utr": {
+        "value": False,
+        "msg": "\"A \"stop_codon\" feature must be excluded from coordinates of \"3UTR\" features"
+    },
     "start_codon_more_than_3": {
         "value": False,
         "msg": "\"start_codon\" total lenght must be less than or equal to 3"
@@ -103,5 +111,5 @@ violations = {
     "text_attribute_not_doublequotes": {
         "value": [],
         "msg": "Text attributes must be wrapped by double quotes"
-    },
+    }
 }
