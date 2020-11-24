@@ -39,4 +39,4 @@ The possible violations that are assessed and evaluated by the script are descri
 | Stop codon in 3UTR coordinates | A _stop_codon_ feature (that is not required to be atomic and can be defined in several records as separated intervals) must not be included in the intervals of coordinates of _3UTR_ feature | file-27.gtf |
 
 
-After validation, detected violations are listed in `report.txt` file, that is written in current directory.
+After validation, detected violations are listed in `report.txt` file, that is written in current directory. Every entry of the report shows a progressive number of the error (a counter), the 1-based index of the line record where the error happened (`/` means that the error doesn't refer to a specific line, but has a global meaning in the file, such as "Missing CDS") and a description of the violation.
