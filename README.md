@@ -12,6 +12,8 @@ The possible violations that are assessed and evaluated by the script are descri
 |-------|-------------|-------------|
 | Source not unique | The _source_ field of every record must be the same in the whole file | file-1.gtf |
 | Missing CDS | At least one _CDS_ feature is required in the file | file-2.gtf |
+| Missing start codon | At least one _start_codon_ feature is required in the file | file-3.gtf |
+| Missing stop codon | At least one _stop_codon_ feature is required in the file | file-4.gtf |
 
 
 After validation, detected violations are listed in `report.txt` file, that is written in current directory.
