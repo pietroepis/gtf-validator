@@ -10,7 +10,8 @@ The documentation about GTF file standard that was considered is available at ht
 The possible violations that are assessed and evaluated by the script are descripted in following table:
 | Error | Description | Sample File |
 |-------|-------------|-------------|
-| Source not unique | The _source_ field of every record must be the same in the whole file | file-1.gtf|
+| Source not unique | The _source_ field of every record must be the same in the whole file | file-1.gtf |
+| Missing CDS | At least one _CDS_ feature is required in the file | file-2.gtf |
 
 
 After validation, detected violations are listed in `report.txt` file, that is written in current directory.
