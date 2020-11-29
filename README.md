@@ -7,7 +7,7 @@ The documentation about GTF file standard that was considered is available at ht
 
 `samples` folder contains a set of test files. Every file contains one or more errors, but all related to a _single violation_ of those detected by the validator. Every file is associated to its corresponding violation in the description below. `file-0.gtf` doesn't contain any error.
 
-The possible violations that are assessed and evaluated by the script are descripted in following table:
+The possible violations that are assessed by the script are descripted in following table:
 | Error | Description | Sample File |
 |-------|-------------|-------------|
 | Source not unique | The _source_ field of every record must be the same in the whole file | file-1.gtf |
