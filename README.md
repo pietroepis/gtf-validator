@@ -33,7 +33,7 @@ The possible violations that are assessed by the script are descripted in follow
 | Missing "gene_id" | The "gene_id" attribute is required in every record | file-21.gtf |
 | Missing "transcript_id" | The "transcript_id" attribute is required in every record, even if with empty value as shown before | file-22.gtf |
 | Invalid attributes order | "gene_id" and "transcript_id" attributes must always be the first. Every other possible attribute will follow these two | file-23.gtf |
-| Invalid attributes separator | Every attribute must be followed by a semicolon. Whether it's not the last in the list, it will alsa be separated by the following one with exactly one space | file-24.gtf |
+| Invalid attributes separator | Every attribute must be followed by a semicolon. Whether it's not the last in the list, it will also be separated by the following one with exactly one space | file-24.gtf |
 | Text attribute not in `""` | Text attributes must be wrapped by double quotes | file-25.gtf |
 | Start codon not in CDS coordinates | A _start_codon_ feature (that is not required to be atomic and can be defined in several records as separated intervals) must be included in the intervals of coordinates of the _CDS_ | file-26.gtf |
 | Stop codon in 3UTR coordinates | A _stop_codon_ feature (that is not required to be atomic and can be defined in several records as separated intervals) must not be included in the intervals of coordinates of _3UTR_ feature | file-27.gtf |
