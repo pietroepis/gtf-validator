@@ -1,7 +1,7 @@
 # gtf-validator
 Bioinformatics Project - UniMiB
 
-GTF (Gene Transfer Format) file standard validator\
+GTF (Gene Transfer Format) file standard validator
 
 The script takes a GTF file as input and checks whether it respects the syntax rules defined by the format.\
 The documentation about GTF file standard that was considered is available at https://mblab.wustl.edu/GTF22.html
